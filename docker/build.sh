@@ -12,7 +12,7 @@ if [ $# -ne 1 ]; then
 fi
 
 ORIGINAL_IMAGE="$1"
-NEW_IMAGE="${ORIGINAL_IMAGE}-deadsmanswitch"
+NEW_IMAGE="${ORIGINAL_IMAGE}-deadmanswitch"
 
 # Check if wrapped image already exists
 # if docker image inspect "${NEW_IMAGE}" >/dev/null 2>&1; then
@@ -22,16 +22,23 @@ NEW_IMAGE="${ORIGINAL_IMAGE}-deadsmanswitch"
 
 docker pull "${ORIGINAL_IMAGE}"
 # Get original entrypoint and cmd
-ENTRYPOINT=$(docker inspect --format='{{json .Config.Entrypoint}}' "${ORIGINAL_IMAGE}")
-CMD=$(docker inspect --format='{{json .Config.Cmd}}' "${ORIGINAL_IMAGE}")
+JSON_ENTRYPOINT=$(docker inspect --format='{{json .Config.Entrypoint}}' "${ORIGINAL_IMAGE}")
+JSON_CMD=$(docker inspect --format='{{json .Config.Cmd}}' "${ORIGINAL_IMAGE}")
+
+ENTRYPOINT=$(node -e "a=${JSON_ENTRYPOINT}; a.unshift('deadmanswitch'); console.log(JSON.stringify(a));")
 
 # Build new image
 docker build \
   -t "$NEW_IMAGE" \
-  --build-arg ORIGINAL_ENTRYPOINT=${ENTRYPOINT} \
-  --build-arg ORIGINAL_CMD=${CMD} \
   --build-arg BASE_IMAGE="${ORIGINAL_IMAGE}" \
   -f deadmanswitch.dockerfile .
+
+TMP_CONTAINER=$(docker create "${NEW_IMAGE}")
+docker commit \
+  --change="CMD ${JSON_CMD}" \
+  --change="ENTRYPOINT ${ENTRYPOINT}" \
+  "${TMP_CONTAINER}" "${NEW_IMAGE}"
+docker rm "${TMP_CONTAINER}"
 
 echo "Created new image: $NEW_IMAGE"
 echo "Original entrypoint: $ENTRYPOINT"
