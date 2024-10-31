@@ -1,0 +1,20 @@
+{
+  "include": ["src"],
+  "exclude": ["lib"],
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "strict": true,
+    "target": "ESNext",
+    "isolatedModules": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "NodeNext",
+    "esModuleInterop": true,
+    "module": "NodeNext",
+    "lib": [ "esnext", "DOM", "DOM.Iterable" ],
+    "types": [ "node" ],
+    "outDir": "./types"
+  },
+  "references": [
+  ]
+}
