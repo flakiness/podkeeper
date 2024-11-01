@@ -2,12 +2,13 @@ import ms from 'ms';
 import { GenericService } from './genericService.js';
 
 const IMAGE_NAME = 'postgres:latest';
+const POSTGRES_PORT = 5432;
 
 export class Postgres {
   static async launch({ user = 'user', password = 'password', db = 'postgres' } = {}) {
     const service = await GenericService.launch({
       imageName: 'postgres:latest',
-      containerServicePort: 5432,
+      ports: [POSTGRES_PORT],
       healthcheck: {
         test: ['CMD-SHELL', 'pg_isready'],
         intervalMs: ms('1s'),
@@ -19,6 +20,10 @@ export class Postgres {
         'POSTGRES_USER': user,
         'POSTGRES_PASSWORD': password,
         'POSTGRES_DB': db,
+        // Duplicate env variables for the healthchecks.
+        'PGUSER': user,
+        'PGPASSWORD': password,
+        'PGDATABASE': db,
       },
     });
     return new Postgres(service, user, password, db);
@@ -32,11 +37,11 @@ export class Postgres {
   ) {
   }
 
-  databaseUrl() { return `postgres://${this._user}:${this._password}@localhost:${this._service.port()}/${this._db}`; }
+  databaseUrl() { return `postgres://${this._user}:${this._password}@localhost:${this._service.mappedPort(POSTGRES_PORT)!}/${this._db}`; }
   connectOptions() {
     return {
       host: 'localhost',
-      port: this._service.port(),
+      port: this._service.mappedPort(POSTGRES_PORT)!,
       database: this._db,
       user: this._user,
       password: this._password,

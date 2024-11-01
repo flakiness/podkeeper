@@ -1,7 +1,4 @@
 *
-!lib/
 !lib/**
-!types/
 !types/**
-!docker/
-!docker/**
+!deadmanswitch/bin/*

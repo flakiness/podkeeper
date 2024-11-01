@@ -2,13 +2,14 @@ import ms from 'ms';
 import { GenericService } from './genericService.js';
 
 const MYSQL_IMAGE_NAME = 'mysql:latest';
+const MYSQL_PORT = 3306;
 
 export class MySQL {
 
   static async launch({ db = 'mydatabase', rootPassword = 'rootpassword' } = {}) {
     const service = await GenericService.launch({
       imageName: 'mysql:latest',
-      containerServicePort: 3306,
+      ports: [MYSQL_PORT],
       healthcheck: {
         test: ['CMD-SHELL', `mysqladmin ping --host 127.0.0.1 -u root --password=${rootPassword}`],
         intervalMs: ms('100ms'),
@@ -34,12 +35,12 @@ export class MySQL {
   ) {
   }
 
-  databaseUrl() { return `mysql://root:${this._rootPassword}@localhost:${this._service.port()}/${this._db}`; }
+  databaseUrl() { return `mysql://root:${this._rootPassword}@localhost:${this._service.mappedPort(MYSQL_PORT)!}/${this._db}`; }
 
   connectOptions() { 
     return {
       host: 'localhost',
-      port: this._service.port(),
+      port: this._service.mappedPort(MYSQL_PORT)!,
       database: this._db,
       user: 'root',
       password: this._rootPassword,

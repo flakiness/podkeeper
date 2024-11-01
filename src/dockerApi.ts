@@ -67,6 +67,7 @@ interface LaunchContainerOptions {
   imageId: string;
   autoRemove: boolean;
   command?: string[];
+  entrypoint?: string[];
   labels?: Record<string, string>;
   ports?: { container: number, host: number }[],
   name?: string;
@@ -77,6 +78,10 @@ interface LaunchContainerOptions {
     retries: number,
     startPeriodMs: number,
   },
+  binds?: {
+    hostPath: string,
+    containerPath: string,
+  }[],
   workingDir?: string;
   waitUntil?: 'not-running' | 'next-exit' | 'removed';
   env?: { [key: string]: string | number | boolean | undefined };
@@ -93,10 +98,12 @@ export async function launchContainer(options: LaunchContainerOptions): Promise<
     Cmd: options.command,
     WorkingDir: options.workingDir,
     Labels: options.labels ?? {},
-    AttachStdout: true,
-    AttachStderr: true,
+    AttachStdin: false,
+    AttachStdout: false,
+    AttachStderr: false,
     Image: options.imageId,
     ExposedPorts,
+    Entrypoint: options.entrypoint,
     Healthcheck: options.healthcheck ? {
       Test: options.healthcheck.test,
       Interval: options.healthcheck.intervalMs * 1000000, // must be in nano seconds
@@ -106,6 +113,7 @@ export async function launchContainer(options: LaunchContainerOptions): Promise<
     } : undefined,
     Env: dockerProtocolEnv(options.env),
     HostConfig: {
+      Binds: options.binds?.map(bind => `${bind.hostPath}:${bind.containerPath}`),
       Init: true,
       AutoRemove: options.autoRemove,
       ShmSize: 2 * 1024 * 1024 * 1024,
@@ -175,6 +183,10 @@ export async function commitContainer(options: CommitContainerOptions) {
     WorkingDir: options.workingDir,
     Env: dockerProtocolEnv(options.env),
   });
+}
+
+export async function inspectImage(imageId: string): Promise<any> {
+  return await getJSON(`/images/${imageId}/json`);
 }
 
 export async function listImages(): Promise<DockerImage[]> {

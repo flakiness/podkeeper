@@ -2,3 +2,5 @@ node_modules/
 test-results/
 lib/
 types/
+deadmanswitch/bin/*
+deadmanswitch/deadmanswitch
