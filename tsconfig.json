@@ -2,6 +2,12 @@
   "include": ["src"],
   "exclude": ["lib"],
   "compilerOptions": {
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "declarationDir": "./types",
+    "outDir": "./types",
+    "noEmit": false,
+
     "allowJs": true,
     "checkJs": true,
     "strict": true,
@@ -12,8 +18,7 @@
     "esModuleInterop": true,
     "module": "NodeNext",
     "lib": [ "esnext", "DOM", "DOM.Iterable" ],
-    "types": [ "node" ],
-    "outDir": "./types"
+    "types": [ "node" ]
   },
   "references": [
   ]
