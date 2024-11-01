@@ -10,7 +10,6 @@ const __dirname = path.dirname(__filename);
 
 async function connectWebSocket(address: string, deadline: number): Promise<WebSocket|undefined> {
   while (Date.now() < deadline) {
-    console.log(`attempting...`);
     const socket = new WebSocket(address);
     const result = await new Promise<boolean>((resolve, reject) => {
       socket.on('open', () => resolve(true));
