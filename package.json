@@ -3,10 +3,6 @@
   "type": "module",
   "version": "0.1.0",
   "description": "",
-  "bin": {
-    "deadmanswitch": "./lib/deadmanswitch.js",
-    "deadmanswitch-pull": "./docker/build.sh"
-  },
   "exports": {
     "./*": {
       "types": "./types/src/*",
