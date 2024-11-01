@@ -12,9 +12,15 @@ This setup creates a connection between the launched container and its owner. Wh
 
 ## PodKeeper vs. TestContainers
 
-Both PodKeeper and [TestContainers](https://testcontainers.com/) address the problem of starting, stopping, and cleaning up Docker containers:
+Both PodKeeper and [TestContainers](https://testcontainers.com/) provide solutions for starting, stopping, and cleaning up Docker containers:
 
-- **TestContainers** uses a dedicated Docker container called "Ryuk" to handle cleanup.
-- **PodKeeper** manages cleanup using a [dead man's switch](https://en.wikipedia.org/wiki/Dead_man%27s_switch) mechanism.
+- **TestContainers** uses a dedicated Docker container called "Ryuk" to manage cleanup.
+- **PodKeeper** relies on a [dead man's switch](https://en.wikipedia.org/wiki/Dead_man%27s_switch) mechanism for cleanup.
 
-While TestContainers is a well-established solution with a solid industry record, PodKeeper is an experimental approach exploring an alternative cleanup method.
+While TestContainers is a mature, industry-proven tool, PodKeeper is an experimental alternative that explores a different approach.
+
+There are also some notable differences in API design philosophy:
+
+- **Process Behavior**: PodKeeper services prevent the Node.js process from exiting, while TestContainers services do not.
+- **Container Pulling**: PodKeeper does not implicitly pull containers, requiring them to be available beforehand, whereas TestContainers lazily pulls containers as needed when launching a service.
+
