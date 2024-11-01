@@ -1,11 +1,11 @@
 {
   "name": "deadmanswitch",
   "type": "module",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "",
   "exports": {
     "./*": {
-      "types": "./types/src/*",
+      "types": "./types/*",
       "import": "./lib/*",
       "require": "./lib/*"
     }
