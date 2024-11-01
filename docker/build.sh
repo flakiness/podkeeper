@@ -26,10 +26,12 @@ JSON_ENTRYPOINT=$(docker inspect --format='{{json .Config.Entrypoint}}' "${ORIGI
 JSON_CMD=$(docker inspect --format='{{json .Config.Cmd}}' "${ORIGINAL_IMAGE}")
 
 ENTRYPOINT=$(node -e "a=${JSON_ENTRYPOINT}; a.unshift('deadmanswitch'); console.log(JSON.stringify(a));")
+PACKAGE_VERSION=$(node -e "console.log(require('../package.json').version)");
 
 # Build new image
 docker build \
   -t "$NEW_IMAGE" \
+  --build-arg DEADMANSWITCH_VERSION=$PACKAGE_VERSION \
   --build-arg BASE_IMAGE="${ORIGINAL_IMAGE}" \
   -f deadmanswitch.dockerfile .
 

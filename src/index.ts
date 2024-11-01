@@ -49,7 +49,7 @@ console.log(`[deadmanswitch] Server running on ws://localhost:${port}; waiting $
 closeTimeout = global.setTimeout(() => {
   console.log(`[deadmanswitch] still no client after ${connectionTimeout} seconds - closing.`);
   close();
-});
+}, connectionTimeout * 1000);
 
 // Handle SIGINT (Ctrl+C) gracefully
 process.on('SIGINT', async () => {
