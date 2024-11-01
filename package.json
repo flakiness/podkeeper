@@ -1,5 +1,5 @@
 {
-  "name": "deadmanswitch",
+  "name": "podkeeper",
   "type": "module",
   "version": "0.2.5",
   "description": "",
@@ -14,9 +14,14 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flakiness/podkeeper.git"
+  },
+  "homepage": "https://github.com/flakiness/podkeeper",
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@degulabs/build": "^0.0.1",
     "@playwright/test": "^1.48.2",
