@@ -1,5 +1,20 @@
+import { setTimeout } from 'timers/promises';
 import { WebSocket } from 'ws';
 import * as dockerApi from './dockerApi.js';
+
+async function connectWebSocket(address: string, deadline: number): Promise<WebSocket|undefined> {
+  while (Date.now() < deadline) {
+    const socket = new WebSocket(address);
+    const result = await new Promise<boolean>((resolve, reject) => {
+      socket.on('open', () => resolve(true));
+      socket.on('error', () => reject(false));
+    });
+    if (result)
+      return socket;
+    await setTimeout(100, undefined);
+  }
+  return undefined;
+}
 
 export class GenericService {
   static async launch(options: {
@@ -17,7 +32,7 @@ export class GenericService {
   }) {
     const images = await dockerApi.listImages();
     const imageName = options.imageName + '-deadmanswitch';
-    const image = images.find(image => image.names.includes(options.imageName));
+    const image = images.find(image => image.names.includes(imageName));
     if (!image)
       throw new Error(`ERROR: no image named "${imageName}" - run 'npx deadmanswitch-pull ${options.imageName}'`);
 
@@ -32,6 +47,7 @@ export class GenericService {
       command: options.command,
       env: options.env,
     });
+    const deadline = Date.now() + 10000; // 10s is default timeout before deadmanswitch will kill container.
     const container = (await dockerApi.listContainers()).find(container => container.containerId === containerId);
     if (!container)
       throw new Error('ERROR: failed to launch container!');  
@@ -41,17 +57,14 @@ export class GenericService {
       await dockerApi.stopContainer({ containerId: container.containerId });
       throw new Error('Failed to expose service to host');
     }
-    const ws = new WebSocket(`ws://localhost:${switchBinding.hostPort}`);
-    const wsConnectionPromise = new Promise<void>((resolve, reject) => {
-      ws.on('open', () => resolve());
-      ws.on('error', reject);
-    });
-    await wsConnectionPromise;
-    const service = new GenericService(containerId, serviceBinding.hostPort, ws);
 
     while (!(await dockerApi.isContainerHealthy(container.containerId)))
-      await new Promise(x => setTimeout(x, 100));
+      await setTimeout(100, undefined);
 
+    const ws = await connectWebSocket(`ws://localhost:${switchBinding.hostPort}`, deadline);
+    if (!ws)
+      throw new Error('Failed to connect to launched container');
+    const service = new GenericService(containerId, serviceBinding.hostPort, ws);
     return service;
   }
 
