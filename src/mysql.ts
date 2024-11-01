@@ -6,8 +6,8 @@ const MYSQL_PORT = 3306;
 
 export class MySQL {
 
-  static async launch({ db = 'mydatabase', rootPassword = 'rootpassword' } = {}) {
-    const service = await GenericService.launch({
+  static async start({ db = 'mydatabase', rootPassword = 'rootpassword' } = {}) {
+    const service = await GenericService.start({
       imageName: 'mysql:latest',
       ports: [MYSQL_PORT],
       healthcheck: {

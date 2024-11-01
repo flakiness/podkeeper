@@ -5,8 +5,8 @@ const IMAGE_NAME = 'postgres:latest';
 const POSTGRES_PORT = 5432;
 
 export class Postgres {
-  static async launch({ user = 'user', password = 'password', db = 'postgres' } = {}) {
-    const service = await GenericService.launch({
+  static async start({ user = 'user', password = 'password', db = 'postgres' } = {}) {
+    const service = await GenericService.start({
       imageName: 'postgres:latest',
       ports: [POSTGRES_PORT],
       healthcheck: {

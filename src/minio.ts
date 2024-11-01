@@ -2,9 +2,8 @@ import ms from 'ms';
 import { GenericService } from './genericService.js';
 
 export class Minio {
-
-  static async launch({ accessKeyId = 'root', secretAccessKey = 'password' } = {}) {
-    const service = await GenericService.launch({
+  static async start({ accessKeyId = 'root', secretAccessKey = 'password' } = {}) {
+    const service = await GenericService.start({
       imageName: 'quay.io/minio/minio:latest',
       ports: [9000, 9090],
       healthcheck: {

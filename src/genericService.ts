@@ -23,7 +23,7 @@ async function connectWebSocket(address: string, deadline: number): Promise<WebS
 }
 
 export class GenericService {
-  static async launch(options: {
+  static async start(options: {
     imageName: string,
     ports: number[],
     healthcheck?: {
