@@ -1,5 +1,7 @@
 *
 !lib/
 !lib/**
+!types/
+!types/**
 !docker/
 !docker/**

@@ -13,13 +13,13 @@ const { __dirname, $ } = await BuildScript.initialize(import.meta, {
 const outDir = path.join(__dirname, 'lib');
 const srcDir = path.join(__dirname, 'src');
 const typesDir = path.join(__dirname, 'types');
-await fs.promises.rm(outDir, { recursive: true });
-await fs.promises.rm(typesDir, { recursive: true });
+await fs.promises.rm(outDir, { recursive: true }).catch(e => void e);
+await fs.promises.rm(typesDir, { recursive: true }).catch(e => void e);
 
 const { errors } = await esbuild.build({
   color: true,
   entryPoints: [
-    path.join(srcDir, 'index.ts'),
+    path.join(srcDir, '**/*'),
   ],
   outdir: outDir,
   format: 'esm',

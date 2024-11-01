@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { spawn } from 'child_process';
-import WebSocket, { WebSocketServer } from 'ws';
 import { setTimeout } from 'timers/promises';
+import { WebSocketServer } from 'ws';
 
 // Helper function to print usage
 function printUsage() {
