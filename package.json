@@ -1,10 +1,10 @@
 {
   "name": "deadmanswitch",
   "type": "module",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "",
   "exports": {
-    ".*": {
+    ".": {
       "types": "./types/index.d.ts",
       "import": "./lib/index.js",
       "require": "./lib/index.js"
