@@ -10,7 +10,7 @@ export class Postgres {
       imageName: 'postgres:latest',
       ports: [POSTGRES_PORT],
       healthcheck: {
-        test: ['CMD-SHELL', 'pg_isready'],
+        test: ['CMD-SHELL', 'pg_isready', `--username=${user}`, `--host=localhost`, `--port=${POSTGRES_PORT}`, `--dbname=${db}`],
         intervalMs: ms('1s'),
         retries: 10,
         startPeriodMs: 0,
