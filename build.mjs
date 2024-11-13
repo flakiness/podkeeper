@@ -1,9 +1,9 @@
-#!/usr/bin/env node
+#!/usr/bin/env npx kubik
 
 import path from 'path';
 import esbuild from 'esbuild';
 import fs from 'fs';
-import { BuildScript } from '@degulabs/build';
+import { BuildScript } from 'kubik';
 
 const { __dirname, $ } = await BuildScript.initialize(import.meta, {
   name: 'build & lint',
