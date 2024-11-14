@@ -25,7 +25,8 @@ async function connectWebSocket(address: string, deadline: number): Promise<WebS
 export class GenericService {
   static async start(options: {
     imageName: string,
-    ports: { host: number, container: number }[],
+    ports?: { host: number, container: number }[],
+    binds?: { hostPath: string, containerPath: string }[],
     healthcheck?: {
       test: string[],
       intervalMs: number,
@@ -47,7 +48,7 @@ export class GenericService {
     const command = [metadata.Config.Entrypoint, options.command ?? metadata.Config.Cmd].flat();
     const deadmanswitchName = imageArch === 'arm64' ? 'deadmanswitch_linux_aarch64' : 'deadmanswitch_linux_x86_64';
 
-    const usedPorts = new Set(options.ports.map(port => port.container));
+    const usedPorts = new Set((options.ports ?? []).map(port => port.container));
     let switchPort = 54321;
     while (usedPorts.has(switchPort))
       ++switchPort;
@@ -55,10 +56,11 @@ export class GenericService {
       imageId: image.imageId,
       autoRemove: true,
       binds: [
+        ...(options.binds ?? []),
         { containerPath: '/deadmanswitch', hostPath: path.join(__dirname, '..', 'deadmanswitch', 'bin', deadmanswitchName) },
       ],
       ports: [
-        ...options.ports,
+        ...options.ports ?? [],
         { container: switchPort, host: 0, }
       ],
       entrypoint,
