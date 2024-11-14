@@ -6,10 +6,13 @@ const MYSQL_PORT = 3306;
 
 export class MySQL {
 
-  static async start({ db = 'mydatabase', rootPassword = 'rootpassword' } = {}) {
+  static async start({ db = 'mydatabase', rootPassword = 'rootpassword', hostPort = 0 } = {}) {
     const service = await GenericService.start({
       imageName: 'mysql:latest',
-      ports: [MYSQL_PORT],
+      ports: [{
+        container: MYSQL_PORT,
+        host: hostPort,
+      }],
       healthcheck: {
         test: ['CMD-SHELL', `mysqladmin ping --host 127.0.0.1 -u root --password=${rootPassword}`],
         intervalMs: ms('100ms'),

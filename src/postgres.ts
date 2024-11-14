@@ -5,10 +5,10 @@ const IMAGE_NAME = 'postgres:latest';
 const POSTGRES_PORT = 5432;
 
 export class Postgres {
-  static async start({ user = 'user', password = 'password', db = 'postgres' } = {}) {
+  static async start({ user = 'user', password = 'password', db = 'postgres', hostPort = 0 } = {}) {
     const service = await GenericService.start({
       imageName: 'postgres:latest',
-      ports: [POSTGRES_PORT],
+      ports: [{ container: POSTGRES_PORT, host: hostPort }],
       healthcheck: {
         test: ['CMD-SHELL', 'pg_isready', `--username=${user}`, `--host=localhost`, `--port=${POSTGRES_PORT}`, `--dbname=${db}`],
         intervalMs: ms('1s'),
