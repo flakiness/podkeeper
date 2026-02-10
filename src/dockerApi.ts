@@ -16,9 +16,9 @@
 import http from 'http';
 
 // Docker engine API.
-// See https://docs.docker.com/engine/api/v1.41/
+// See https://docs.docker.com/engine/api/v1.44/
 
-const DOCKER_API_VERSION = '1.41';
+const DOCKER_API_VERSION = '1.44';
 
 export interface DockerImage {
   imageId: string;
