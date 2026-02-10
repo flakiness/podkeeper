@@ -2,6 +2,7 @@ import { setTimeout } from 'timers/promises';
 import { WebSocket } from 'ws';
 import * as dockerApi from './dockerApi.js';
 
+import fs from 'fs';
 import path from 'path';
 import url from 'url';
 
@@ -47,6 +48,9 @@ export class GenericService {
     const entrypoint = ['/deadmanswitch'];
     const command = [metadata.Config.Entrypoint, options.command ?? metadata.Config.Cmd].flat();
     const deadmanswitchName = imageArch === 'arm64' ? 'deadmanswitch_linux_aarch64' : 'deadmanswitch_linux_x86_64';
+    const deadmanswitchPath = path.join(__dirname, '..', 'deadmanswitch', 'bin', deadmanswitchName);
+    // npm/pnpm strips executable permissions from files in the tarball, so fix them up.
+    fs.chmodSync(deadmanswitchPath, 0o755);
 
     const usedPorts = new Set((options.ports ?? []).map(port => port.container));
     let switchPort = 54321;
@@ -57,7 +61,7 @@ export class GenericService {
       autoRemove: true,
       binds: [
         ...(options.binds ?? []),
-        { containerPath: '/deadmanswitch', hostPath: path.join(__dirname, '..', 'deadmanswitch', 'bin', deadmanswitchName) },
+        { containerPath: '/deadmanswitch', hostPath: deadmanswitchPath },
       ],
       ports: [
         ...options.ports ?? [],
