@@ -100,3 +100,14 @@ There are also some notable differences in API design philosophy:
 - **Process Behavior**: PodKeeper services prevent the Node.js process from exiting, while TestContainers services do not.
 - **Container Pulling**: PodKeeper does not implicitly pull containers, requiring them to be available beforehand, whereas TestContainers lazily pulls containers as needed when launching a service.
 - **Healthchecks**: The services that PodKeeper ships out-of-the-box are pre-configured to use proper healthchecks.
+
+## Publishing
+
+To publish a new version:
+
+```sh
+pnpm version minor -m "chore: mark v%s"  # or: pnpm version patch -m "chore: mark v%s"
+git push --tags upstream main
+```
+
+The GitHub Actions workflow will automatically build and publish to npm when the tag is pushed.
