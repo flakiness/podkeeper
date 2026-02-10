@@ -43,6 +43,9 @@ jobs:
       - name: Build deadmanswitch
         run: bash deadmanswitch/build.sh
 
+      - name: Pull docker container
+        run: docker pull postgres:latest
+
       - name: Make sure tests pass before publishing
         run: pnpm exec playwright test
 
