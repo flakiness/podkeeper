@@ -9,7 +9,7 @@ export class Minio {
     hostWebuiPort = 0,
   } = {}) {
     const service = await GenericService.start({
-      imageName: 'quay.io/minio/minio:latest',
+      imageName: 'cgr.dev/chainguard/minio:latest',
       ports: [{
         container: 9000,
         host: hostApiPort,
