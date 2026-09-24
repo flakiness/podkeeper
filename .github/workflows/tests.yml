@@ -1,0 +1,37 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: deadmanswitch/go.mod
+          cache-dependency-path: deadmanswitch/go.sum
+
+      - name: Install UPX
+        run: sudo apt-get install -y upx
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # v6.0.8
+        with:
+          standalone: true
+          cache: true
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm build:deadmanswitch
+      - run: docker pull postgres:latest
+      - run: pnpm test

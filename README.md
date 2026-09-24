@@ -101,13 +101,35 @@ There are also some notable differences in API design philosophy:
 - **Container Pulling**: PodKeeper does not implicitly pull containers, requiring them to be available beforehand, whereas TestContainers lazily pulls containers as needed when launching a service.
 - **Healthchecks**: The services that PodKeeper ships out-of-the-box are pre-configured to use proper healthchecks.
 
-## Publishing
+## Development
 
-To publish a new version:
+Requires [pnpm](https://pnpm.io/) 11. pnpm installs the Node.js version pinned in `devEngines` in `package.json`.
 
 ```sh
-pnpm version minor -m "chore: mark v%s"  # or: pnpm version patch -m "chore: mark v%s"
-git push --tags upstream main
+pnpm install
+pnpm build                # TypeScript
+pnpm build:deadmanswitch  # Go binaries; needs Go and UPX
+pnpm test                 # needs Docker and `docker pull postgres:latest`
 ```
 
-The GitHub Actions workflow will automatically build and publish to npm when the tag is pushed.
+## Releasing
+
+1. Bump the version:
+
+   ```sh
+   # For a stable minor release
+   pnpm version minor
+
+   # For an alpha pre-release
+   pnpm version preminor --preid=alpha
+   ```
+
+2. Push the commit and tag:
+
+   ```sh
+   git push --follow-tags
+   ```
+
+3. [Create a GitHub Release](https://github.com/flakiness/podkeeper/releases/new) for the new tag and publish it.
+
+   CI will handle publishing to npm. Pre-releases are published under the `@next` tag.
