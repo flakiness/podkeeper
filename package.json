@@ -2,6 +2,7 @@
   "name": "podkeeper",
   "type": "module",
   "version": "0.8.0",
+  "packageManager": "pnpm@11.5.0",
   "description": "",
   "exports": {
     ".": {
@@ -12,7 +13,9 @@
   },
   "main": "index.js",
   "scripts": {
-    "test": "npx playwright test"
+    "build": "kubik ./build.mjs",
+    "build:deadmanswitch": "bash deadmanswitch/build.sh",
+    "test": "playwright test"
   },
   "repository": {
     "type": "git",
@@ -22,6 +25,16 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^24.21.0",
+      "onFail": "download"
+    }
+  },
   "devDependencies": {
     "@playwright/test": "^1.58.2",
     "@types/ms": "^0.7.34",
