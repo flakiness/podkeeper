@@ -4,3 +4,4 @@ lib/
 types/
 deadmanswitch/bin/*
 deadmanswitch/deadmanswitch
+flakiness-report/
