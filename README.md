@@ -1,3 +1,5 @@
+[![Tests](https://img.shields.io/endpoint?url=https%3A%2F%2Fflakiness.io%2Fapi%2Fbadge%3Finput%3D%257B%2522badgeToken%2522%253A%2522badge-6HrTsfBUzBrZ1ux7DhDppu%2522%257D)](https://flakiness.io/flakiness/podkeeper)
+
 # PodKeeper
 
 > ⚠️ **Warning:** PodKeeper is currently in pre-1.0.0 release. Expect potential changes and experimental features that may not be fully stable yet.
