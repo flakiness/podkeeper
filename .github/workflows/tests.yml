@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: read
+  id-token: write  # Required for Flakiness.io OIDC upload
 
 jobs:
   test:
@@ -34,4 +35,7 @@ jobs:
       - run: pnpm build
       - run: pnpm build:deadmanswitch
       - run: docker pull postgres:latest
+      - uses: flakiness/authenticate-fork-prs@v1
+        with:
+          flakiness-project: flakiness/podkeeper
       - run: pnpm test
